@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image";
 import data from "./example-data/data.json";
 
@@ -38,8 +40,15 @@ function TemperatureDisplay({ temperature }: { temperature: number }) {
 
   return (
     <div className="relative flex items-center justify-center">
-      <div className={`w-64 h-64 rounded-full bg-gradient-to-br ${gradientColor} shadow-2xl flex items-center justify-center transition-all duration-500`}>
-        <div className="w-56 h-56 rounded-full bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center relative">
+      <div className={`w-64 h-64 rounded-full bg-gradient-to-br ${gradientColor} shadow-2xl flex items-center justify-center transition-all duration-500 relative overflow-hidden`}>
+        {/* Animated shine effect */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/20 to-transparent" 
+             style={{
+               animation: 'shine 3s ease-in-out infinite',
+             }}></div>
+        
+        <div className="w-56 h-56 rounded-full bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center relative z-10">
           <div className="absolute -top-2 -right-2 text-3xl animate-bounce">
             {showWarning ? warningIcon : "✅"}
           </div>
@@ -56,7 +65,24 @@ function TemperatureDisplay({ temperature }: { temperature: number }) {
           )}
         </div>
       </div>
-      <div className="absolute inset-0 w-64 h-64 rounded-full bg-gradient-to-tr from-transparent via-white/20 to-transparent animate-pulse"></div>
+      
+      {/* Outer glow effect */}
+      <div className="absolute inset-0 w-64 h-64 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent animate-pulse"></div>
+      
+      {/* Custom styles for shine animation */}
+      <style jsx>{`
+        @keyframes shine {
+          0% {
+            transform: translateX(-100%) translateY(-100%) rotate(45deg);
+          }
+          50% {
+            transform: translateX(100%) translateY(100%) rotate(45deg);
+          }
+          100% {
+            transform: translateX(-100%) translateY(-100%) rotate(45deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }
