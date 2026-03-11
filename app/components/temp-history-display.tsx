@@ -2,45 +2,56 @@
 
 import { useEffect, useRef, useState } from "react";
 
-interface TemperatureData {
+interface SensorData {
+    ts: string;
     temperature: number;
-    timestamp: string;
 }
 
 interface TempHistoryDisplayProps {
-    data: TemperatureData[];
+    data: SensorData[];
     hoursToShow?: number;
 }
 
 export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
     const [hoursToShow, setHoursToShow] = useState(24);
-    const [sortedData, setSortedData] = useState<TemperatureData[]>([]);
+    const [sortedData, setSortedData] = useState<SensorData[]>([]);
 
     const chartRef = useRef<HTMLDivElement>(null);
     const chartInstanceRef = useRef<any>(null);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            // Filter data to show last N hours
-            // Find the latest timestamp in the data to use as "now" for demo purposes
-            const latestTimestamp = new Date(Math.max(...data.map(item => new Date(item.timestamp).getTime())));
-            const now = latestTimestamp;
-            const cutoffTime = new Date(now.getTime() - hoursToShow * 60 * 60 * 1000);
-            let filteredData = data.filter(item => new Date(item.timestamp) >= cutoffTime);
+            console.log("Chart received data:", data);
+            console.log("Data length:", data.length);
+            console.log("Hours to show:", hoursToShow);
 
-            // If no data within the time window (demo data is old), show all data
-            if (filteredData.length === 0) {
-                filteredData = [...data];
+            if (data.length === 0) {
+                console.log("No data to display");
+                return;
             }
 
-            // Sort filtered data by timestamp (oldest first for chart)
-            filteredData.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+            // Find the latest timestamp in the data
+            const latestTimestamp = new Date(Math.max(...data.map(item => new Date(item.ts).getTime())));
+            const cutoffTime = new Date(latestTimestamp.getTime() - hoursToShow * 60 * 60 * 1000);
+
+            console.log("Latest timestamp:", latestTimestamp);
+            console.log("Cutoff time:", cutoffTime);
+
+            // Filter data to show only data within the selected time range
+            let filteredData = data.filter(item => new Date(item.ts) >= cutoffTime);
+
+            console.log("Filtered data length:", filteredData.length);
+
+            // Sort data by timestamp (oldest first for chart)
+            filteredData.sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime());
 
             // Convert timestamps to milliseconds for proper time-based chart
             const timestampData = filteredData.map(item => ({
-                x: new Date(item.timestamp).getTime(),
+                x: new Date(item.ts).getTime(),
                 y: item.temperature
             }));
+
+            console.log("Chart data points:", timestampData.length);
 
             // Dynamically import ApexCharts
             import('apexcharts').then((ApexCharts) => {
@@ -192,6 +203,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                         <option value={48}>2 Days</option>
                         <option value={120}>5 Days</option>
                         <option value={168}>7 Days</option>
+                        <option value={744}>1 Month</option>
                     </select>
                 </div>
             </div>
