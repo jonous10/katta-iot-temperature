@@ -1,9 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import TemperatureDisplay from "./components/temp-display";
-import TempHistoryDisplay from "./components/temp-history-display";
+import { useEffect, useState } from "react";
+import TemperatureDisplay from "@/components/temp-display";
+import TempHistoryDisplay from "@/components/temp-history-display";
 
 // Define the interface for API response data
 interface ApiSensorData {
