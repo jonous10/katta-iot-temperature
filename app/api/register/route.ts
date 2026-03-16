@@ -9,8 +9,8 @@ export async function POST(req: Request) {
 
   const db = await getConnection();
   await db.query(
-    "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
-    [name, email, password_hash]
+    "INSERT INTO users (name, email, password_hash, type) VALUES (?, ?, ?, ?)",
+    [name, email, password_hash, 'guest']
   );
   await db.end();
 

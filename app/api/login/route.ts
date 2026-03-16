@@ -23,10 +23,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
-  // Set a simple session cookie
-  const response = NextResponse.json({ success: true });
+  // Set session cookie with user ID and type
+  const response = NextResponse.json({
+    success: true,
+    userType: user.type,
+    userName: user.name
+  });
   response.cookies.set("session", String(user.id), {
     httpOnly: true,
+    path: "/",
+  });
+  response.cookies.set("userType", user.type, {
     path: "/",
   });
 
