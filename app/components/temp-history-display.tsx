@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react";
+import TemperatureDisplay from "./temp-display";
 
 interface SensorData {
     ts: string;
@@ -163,52 +164,46 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
     }, [data, hoursToShow]);
 
     return (
-        <div className="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md mt-8 w-full">
-            <div className="relative mx-4 mt-4 flex flex-col gap-4 overflow-hidden rounded-none bg-transparent bg-clip-border text-gray-700 shadow-none md:flex-row md:items-center">
-                <div className="w-max rounded-lg bg-gray-900 p-5 text-white">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className="h-6 w-6"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"
-                        ></path>
-                    </svg>
-                </div>
-                <div className="flex-1">
-                    <h6 className="block font-sans text-base font-semibold leading-relaxed tracking-normal text-blue-gray-900 antialiased">
-                        Temperature Chart
-                    </h6>
-                    <p className="block max-w-sm font-sans text-sm font-normal leading-normal text-gray-700 antialiased">
-                        Visualize temperature data over time using ApexCharts.
-                    </p>
-                </div>
-                <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-gray-700">Time Range:</label>
-                    <select
-                        value={hoursToShow}
-                        onChange={(e) => setHoursToShow(Number(e.target.value))}
-                        className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        <option value={1}>1 Hour</option>
-                        <option value={6}>6 Hours</option>
-                        <option value={24}>24 Hours</option>
-                        <option value={48}>2 Days</option>
-                        <option value={120}>5 Days</option>
-                        <option value={168}>7 Days</option>
-                        <option value={744}>1 Month</option>
-                    </select>
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4 border-b border-gray-200">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    {/* Title and current temp */}
+                    <div className="flex items-center gap-4">
+                        <TemperatureDisplay temperature={data[data.length - 1]?.temperature || 0} size="small" />
+                        <div>
+                            <h3 className="text-lg font-bold text-gray-900">
+                                Temperature Analytics
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                                Monitor temperature trends over time
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Time range selector */}
+                    <div className="flex items-center gap-2">
+                        <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Range:</label>
+                        <select
+                            value={hoursToShow}
+                            onChange={(e) => setHoursToShow(Number(e.target.value))}
+                            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm hover:border-gray-400 transition-colors"
+                        >
+                            <option value={1}>1 Hour</option>
+                            <option value={6}>6 Hours</option>
+                            <option value={24}>24 Hours</option>
+                            <option value={48}>2 Days</option>
+                            <option value={120}>5 Days</option>
+                            <option value={168}>1 Week</option>
+                            <option value={744}>1 Month</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div className="pt-6 px-2 pb-0">
-                <div ref={chartRef}></div>
+
+            {/* Chart container */}
+            <div className="p-6 bg-gray-50/30">
+                <div ref={chartRef} className="w-full min-h-[300px]"></div>
             </div>
         </div>
     );

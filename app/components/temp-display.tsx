@@ -1,4 +1,10 @@
-export default function TemperatureDisplay({ temperature }: { temperature: number }) {
+export default function TemperatureDisplay({
+  temperature,
+  size = "large",
+}: {
+  temperature: number;
+  size?: "small" | "large";
+}) {
   const temperatureThresholds = {
     cold: 15,
     hot: 25,
@@ -16,7 +22,7 @@ export default function TemperatureDisplay({ temperature }: { temperature: numbe
   const getWarningIcon = (temp: number) => {
     if (temp <= temperatureThresholds.cold) return "❄️";
     if (temp >= temperatureThresholds.hot) return "🔥";
-    return null;
+    return "✅";
   };
 
   const getWarningMessage = (temp: number) => {
@@ -29,49 +35,72 @@ export default function TemperatureDisplay({ temperature }: { temperature: numbe
     temperature <= temperatureThresholds.cold ||
     temperature >= temperatureThresholds.hot;
 
-  const warningIcon = getWarningIcon(temperature);
-  const warningMessage = getWarningMessage(temperature);
+  const roundedTemperature = Math.round(temperature * 10) / 10;
   const gradientColor = getTemperatureColor(temperature);
+
+  const sizes = {
+    small: {
+      container: "w-16 h-16",
+      inner: "w-14 h-14",
+      text: "text-lg font-bold",
+      emoji: "text-lg",
+      emojiPosition: "-top-1 -right-1",
+    },
+    large: {
+      container: "w-64 h-64",
+      inner: "w-56 h-56",
+      text: "text-6xl font-bold",
+      emoji: "text-3xl",
+      emojiPosition: "-top-2 -right-2",
+    },
+  };
+
+  const currentSize = sizes[size];
 
   return (
     <div className="relative flex items-center justify-center">
-      <div className={`w-64 h-64 rounded-full bg-gradient-to-br ${gradientColor} shadow-2xl flex items-center justify-center transition-all duration-500 relative`}>
-
-        {/* Shine container (ONLY this clips) */}
+      {/* Main container with gradient */}
+      <div
+        className={`${currentSize.container} rounded-full bg-gradient-to-br ${gradientColor} shadow-xl flex items-center justify-center transition-all duration-500 relative border border-white/20`}
+      >
+        {/* Shine effect */}
         <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/50 to-transparent animate-pulse"></div>
-
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent animate-pulse"></div>
           <div
-            className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/40 to-transparent"
+            className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/20 to-transparent"
             style={{ animation: "shine 3s ease-in-out infinite" }}
           ></div>
         </div>
 
-        <div className="w-56 h-56 rounded-full bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center relative z-10">
+        {/* Inner white circle */}
+        <div className={`${currentSize.inner} rounded-full bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center relative z-10 border border-white/50 shadow-sm`}>
 
-          {/* Emoji can overflow now */}
-          <div className="absolute -top-2 -right-2 text-3xl animate-bounce">
-            {showWarning ? warningIcon : "✅"}
+          {/* Status emoji */}
+          <div className={`absolute ${currentSize.emojiPosition} ${currentSize.emoji} animate-bounce drop-shadow-sm`}>
+            {getWarningIcon(temperature)}
           </div>
 
-          <div className="text-6xl font-bold text-gray-800">
-            {temperature}°C
+          {/* Temperature text */}
+          <div className={`${currentSize.text} text-gray-800 tabular-nums leading-none`}>
+            {roundedTemperature}°C
           </div>
 
-          <div className="text-xl text-gray-600 mt-2">
-            Celsius
-          </div>
-
-          {showWarning && warningMessage && (
-            <div className="text-sm text-red-600 mt-1 font-semibold">
-              {warningMessage}
-            </div>
+          {/* Additional info for large version */}
+          {size === "large" && (
+            <>
+              <div className="text-sm text-gray-600 mt-1 font-medium">Celsius</div>
+              {showWarning && getWarningMessage(temperature) && (
+                <div className="text-xs text-red-600 mt-2 font-semibold bg-red-50 px-3 py-1 rounded-lg border border-red-200 text-center">
+                  {getWarningMessage(temperature)}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
 
-      {/* Outer glow */}
-      <div className="absolute inset-0 w-64 h-64 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent animate-pulse overflow-hidden"></div>
+      {/* Outer glow effect */}
+      <div className={`absolute inset-0 ${currentSize.container} rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent animate-pulse overflow-hidden`}></div>
 
       <style jsx>{`
         @keyframes shine {
