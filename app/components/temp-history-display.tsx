@@ -99,6 +99,16 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                                 fontFamily: "inherit",
                                 fontWeight: 400,
                             },
+                            formatter: function (val: any) {
+                                const date = new Date(val);
+                                date.setHours(date.getHours() + 2);
+                                return date.toLocaleString('en-GB', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            },
                             datetimeFormatter: {
                                 year: 'yyyy',
                                 month: 'MMM yy',
@@ -116,6 +126,9 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                                 fontFamily: "inherit",
                                 fontWeight: 400,
                             },
+                            formatter: function (val: any) {
+                                return Number(val).toFixed(1);
+                            }
                         },
                     },
                     grid: {
@@ -138,7 +151,18 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                     tooltip: {
                         theme: "dark",
                         x: {
-                            format: 'dd MMM yyyy HH:mm'
+                            format: 'dd MMM yyyy HH:mm',
+                            formatter: function (val: any) {
+                                const date = new Date(val);
+                                date.setHours(date.getHours() + 2);
+                                return date.toLocaleString('en-GB', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            }
                         }
                     },
                 };
@@ -166,7 +190,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
     return (
         <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
             {/* Header */}
-            <div className="bg-linear-to-r from-blue-100 to-orange-100 px-6 py-4 border-b border-gray-400">
+            <div className="clean-fade px-6 py-4 border-b border-gray-400">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     {/* Title and current temp */}
                     <div className="flex items-center gap-4">
@@ -202,7 +226,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
             </div>
 
             {/* Chart container */}
-            <div className="p-6 bg-gray-50/30">
+            <div className="p-4 clean-fade">
                 <div ref={chartRef} className="w-full min-h-[300px]"></div>
             </div>
         </div>

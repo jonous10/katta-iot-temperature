@@ -28,7 +28,7 @@ body {
 }
 
 .clean-fade {
-  @apply bg-linear-to-r from-slate-50 to-white/60 shadow-2xl shadow-white;
+  @apply bg-linear-to-r from-blue-50 to-white/60 shadow-2xl shadow-white;
 }
 
 .clean-blue-fade {

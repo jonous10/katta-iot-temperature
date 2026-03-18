@@ -34,7 +34,7 @@ export default function TemperatureDisplay({
     temperature <= temperatureThresholds.cold ||
     temperature >= temperatureThresholds.hot;
 
-  const roundedTemperature = Math.round(temperature * 10) / 10;
+  const roundedTemperature = Number(temperature.toFixed(1));
   const gradientColor = getTemperatureColor(temperature);
 
   const sizes = {
