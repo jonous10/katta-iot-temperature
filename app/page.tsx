@@ -70,7 +70,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="hidden sm:block">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-16 h-16 clean-blue-fade rounded-2xl flex items-center justify-center">
                   <svg
                     className="w-8 h-8 text-white"
                     fill="none"

@@ -15,7 +15,6 @@ export default function TemperatureDisplay({
     if (temp <= 10) return "from-blue-500 via-cyan-400 to-teal-400";
     if (temp <= 20) return "from-teal-400 via-green-400 to-emerald-400";
     if (temp <= 25) return "from-green-400 via-yellow-400 to-amber-400";
-    if (temp <= 30) return "from-yellow-400 via-orange-400 to-red-400";
     return "from-orange-500 via-red-500 to-red-600";
   };
 
@@ -61,13 +60,13 @@ export default function TemperatureDisplay({
     <div className="relative flex items-center justify-center">
       {/* Main container with gradient */}
       <div
-        className={`${currentSize.container} rounded-full bg-gradient-to-br ${gradientColor} shadow-xl flex items-center justify-center transition-all duration-500 relative border border-white/20`}
+        className={`${currentSize.container} rounded-full bg-linear-to-br ${gradientColor} shadow-xl flex items-center justify-center transition-all duration-500 relative border border-white/20`}
       >
         {/* Shine effect */}
         <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent animate-pulse"></div>
+          <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/30 to-transparent animate-pulse"></div>
           <div
-            className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/20 to-transparent"
+            className="absolute inset-0 bg-linear-to-bl from-transparent via-white/20 to-transparent"
             style={{ animation: "shine 3s ease-in-out infinite" }}
           ></div>
         </div>
@@ -100,7 +99,7 @@ export default function TemperatureDisplay({
       </div>
 
       {/* Outer glow effect */}
-      <div className={`absolute inset-0 ${currentSize.container} rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent animate-pulse overflow-hidden`}></div>
+      <div className={`absolute inset-0 ${currentSize.container} rounded-full bg-linear-to-tr from-transparent via-white/10 to-transparent animate-pulse overflow-hidden`}></div>
 
       <style jsx>{`
         @keyframes shine {

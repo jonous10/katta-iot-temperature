@@ -166,7 +166,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
     return (
         <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4 border-b border-gray-200">
+            <div className="bg-linear-to-r from-blue-100 to-orange-100 px-6 py-4 border-b border-gray-400">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     {/* Title and current temp */}
                     <div className="flex items-center gap-4">

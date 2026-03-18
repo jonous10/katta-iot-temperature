@@ -26,12 +26,12 @@ export default function Header({ currentUser, userType }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 clean-fade">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Brand */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center clean-blue-fade">
               <svg
                 className="w-6 h-6 text-white"
                 fill="none"
@@ -64,7 +64,7 @@ export default function Header({ currentUser, userType }: HeaderProps) {
 
                 {/* User Menu */}
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-linear-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
                       {currentUser?.charAt(0)?.toUpperCase() || 'U'}
                     </span>
@@ -93,7 +93,7 @@ export default function Header({ currentUser, userType }: HeaderProps) {
                 </a>
                 <a
                   href="/login"
-                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg hover:from-blue-700 hover:to-cyan-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+                  className="px-4 py-2 text-sm font-medium text-white clean-blue-fade rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
                 >
                   Get Started
                 </a>
