@@ -11,7 +11,6 @@ type UserRow = {
   created_at?: string;
 };
 
-// Helper to get current user from session
 async function getCurrentUser() {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session");
