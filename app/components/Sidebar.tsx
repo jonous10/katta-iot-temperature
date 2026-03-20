@@ -13,10 +13,10 @@ export default function Sidebar({ children }: SidebarProps) {
 
   const { hasPermission, userType, loading, isAdmin } = usePermissions();
   return (
-    <div className="h-screen bg-[#7B79B8] p-4 overflow-hidden">
+    <div className="h-screen bg-(--sidebar-color) p-4 overflow-hidden">
       <div className="flex h-[calc(100vh-2rem)]">
         {/* Sidebar - fixed height */}
-        <aside className="w-56 bg-[#7B79B8] flex flex-col py-6 relative flex-shrink-0">
+        <aside className="w-56 bg-(--sidebar-color) flex flex-col py-6 relative flex-shrink-0">
           {/* Logo/Title */}
           <div className="px-6 mb-8">
             <h1 className="text-white text-xl font-bold">Sensordata</h1>
@@ -121,7 +121,7 @@ export default function Sidebar({ children }: SidebarProps) {
         </aside>
 
         {/* Main Content Area - scrollable */}
-        <main className="flex-1 bg-white rounded-3xl ml-4 p-8 shadow-xl overflow-y-auto">
+        <main className="flex-1 bg-white rounded-3xl ml-4 p-0 shadow-xl overflow-y-auto">
           {children}
         </main>
       </div>
