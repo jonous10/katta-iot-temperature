@@ -7,9 +7,12 @@ export async function middleware(request: NextRequest) {
   // Only protect API routes
   if (request.nextUrl.pathname.startsWith('/api')) {
 
-    // Skip protection for login and register routes
-    if (request.nextUrl.pathname === '/api/login' ||
-      request.nextUrl.pathname === '/api/register') {
+    if (
+      request.nextUrl.pathname === '/api/login' ||
+      request.nextUrl.pathname === '/api/register' ||
+      request.nextUrl.pathname === '/api/forgot-password' ||
+      request.nextUrl.pathname === '/api/reset-password'
+    ) {
       return NextResponse.next();
     }
 

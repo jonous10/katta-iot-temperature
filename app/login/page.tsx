@@ -197,7 +197,7 @@ export default function LoginPage() {
                 {isLogin && (
                   <div className="text-right">
                     <a
-                      href="#"
+                      href="/forgot-password"
                       className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
                     >
                       Forgot password?
