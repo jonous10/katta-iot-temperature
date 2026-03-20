@@ -2,30 +2,31 @@
 // Add or modify permissions here - it's the only place you need to change!
 
 export enum UserType {
+  OWNER = 'owner',
   ADMIN = 'admin',
-  MANAGER = 'manager',
-  OPERATOR = 'operator',
-  GUEST = 'guest'
+  VIEWER = 'viewer',
+  PENDING = 'pending'
 }
 
 // What each user type can do
 export const PERMISSIONS = {
   // Temperature data permissions
-  VIEW_TEMPERATURE: ['admin', 'manager', 'operator', 'guest'],
-  VIEW_TEMPERATURE_HISTORY: ['admin', 'manager', 'operator'],
-  VIEW_DETAILED_ANALYTICS: ['admin', 'manager'],
+  VIEW_TEMPERATURE: ['owner', 'admin', 'viewer'],
+  VIEW_TEMPERATURE_HISTORY: ['owner', 'admin', 'viewer'],
+  VIEW_DETAILED_ANALYTICS: ['owner', 'admin'],
   
   // Data management permissions
-  EXPORT_DATA: ['admin', 'manager'],
-  DELETE_DATA: ['admin'],
+  EXPORT_DATA: ['owner', 'admin'],
+  DELETE_DATA: ['owner'],
   
   // User management permissions
-  VIEW_USERS: ['admin'],
-  MANAGE_USERS: ['admin'],
+  VIEW_USERS: ['owner', 'admin'],
+  MANAGE_USERS: ['owner', 'admin'],
+  MANAGE_ADMINS: ['owner'], // Only owner can change admin/owner types
   
   // System permissions
-  VIEW_SYSTEM_STATUS: ['admin', 'manager'],
-  MANAGE_SYSTEM: ['admin']
+  VIEW_SYSTEM_STATUS: ['owner', 'admin'],
+  MANAGE_SYSTEM: ['owner']
 };
 
 // Helper class to check permissions
@@ -53,10 +54,10 @@ export class UserPermissions {
   static canAccessRoute(userType: string, route: string): boolean {
     // Define which user types can access which routes
     const routePermissions = {
-      '/api': ['admin', 'manager', 'operator', 'guest'],
-      '/api/export': ['admin', 'manager'],
-      '/api/users': ['admin'],
-      '/api/delete': ['admin']
+      '/api': ['owner', 'admin', 'viewer'],
+      '/api/export': ['owner', 'admin'],
+      '/api/users': ['owner', 'admin'],
+      '/api/delete': ['owner']
     };
     
     const allowedTypes = routePermissions[route as keyof typeof routePermissions];
