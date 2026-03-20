@@ -20,6 +20,8 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState<string>("all");
 
   useEffect(() => {
     // Get current user type from cookie
@@ -135,6 +137,14 @@ export default function UsersPage() {
     return ["pending", "viewer", "admin"];
   };
 
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = filterType === "all" || user.type === filterType;
+    return matchesSearch && matchesType;
+  });
+
   if (loading) {
     return (
       <Sidebar>
@@ -163,6 +173,30 @@ export default function UsersPage() {
           <p className="text-gray-600 mt-1">Manage user access and permissions</p>
         </div>
 
+        {/* Filters */}
+        <div className="mb-4 flex flex-wrap gap-3">
+          <div className="flex-1 min-w-[200px]">
+            <input
+              type="text"
+              placeholder="Search by name or email..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+            />
+          </div>
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white"
+          >
+            <option value="all">All Types</option>
+            <option value="pending">Pending</option>
+            <option value="viewer">Viewer</option>
+            <option value="admin">Admin</option>
+            <option value="owner">Owner</option>
+          </select>
+        </div>
+
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
@@ -174,7 +208,7 @@ export default function UsersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user.id} className={user.id === currentUserId ? "bg-violet-50" : "hover:bg-gray-50"}>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -223,8 +257,10 @@ export default function UsersPage() {
             </tbody>
           </table>
           
-          {users.length === 0 && (
-            <div className="text-center py-8 text-gray-500">No users found</div>
+          {filteredUsers.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              {users.length === 0 ? "No users found" : "No users match your filters"}
+            </div>
           )}
         </div>
 
