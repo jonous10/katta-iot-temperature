@@ -45,13 +45,13 @@ export default function Sidebar({ children }: SidebarProps) {
 
               {/* Data */}
               <Link
-                href="/"
-                className={`relative flex items-center gap-3 px-4 py-3 rounded-r-xl transition-all duration-200 ${pathname === "/"
+                href="/data"
+                className={`relative flex items-center gap-3 px-4 py-3 rounded-r-xl transition-all duration-200 ${pathname === "/data"
                   ? "text-white bg-white/10"
                   : "text-white/70 hover:text-white hover:bg-white/5"
                   }`}
               >
-                {pathname === "/" && (
+                {pathname === "/data" && (
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-10 bg-white rounded-r-full" />
                 )}
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

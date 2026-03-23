@@ -80,7 +80,9 @@ export default function UsersPage() {
       }
 
       // Update local state
-      setUsers(users.map(u => u.id === userId ? { ...u, type: newType } : u));
+      setUsers(
+        users.map((u) => (u.id === userId ? { ...u, type: newType } : u)),
+      );
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to update user");
     } finally {
@@ -107,7 +109,7 @@ export default function UsersPage() {
       }
 
       // Remove from local state
-      setUsers(users.filter(u => u.id !== userId));
+      setUsers(users.filter((u) => u.id !== userId));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to delete user");
     }
@@ -115,11 +117,16 @@ export default function UsersPage() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "owner": return "bg-purple-100 text-purple-800";
-      case "admin": return "bg-blue-100 text-blue-800";
-      case "viewer": return "bg-green-100 text-green-800";
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "owner":
+        return "bg-purple-100 text-purple-800";
+      case "admin":
+        return "bg-blue-100 text-blue-800";
+      case "viewer":
+        return "bg-green-100 text-green-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -168,7 +175,9 @@ export default function UsersPage() {
       <div className="h-full m-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
-          <p className="text-gray-600 mt-1">Manage user access and permissions</p>
+          <p className="text-gray-600 mt-1">
+            Manage user access and permissions
+          </p>
         </div>
 
         {/* Filters */}
@@ -199,15 +208,30 @@ export default function UsersPage() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">User</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  User
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Type
+                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredUsers.map((user) => (
-                <tr key={user.id} className={user.id === currentUserId ? "bg-violet-50" : "hover:bg-gray-50"}>
+                <tr
+                  key={user.id}
+                  className={
+                    user.id === currentUserId
+                      ? "bg-violet-50"
+                      : "hover:bg-gray-50"
+                  }
+                >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-violet-200 flex items-center justify-center text-violet-700 font-semibold text-sm">
@@ -215,7 +239,9 @@ export default function UsersPage() {
                       </div>
                       <span className="font-medium text-gray-900">
                         {user.name}
-                        {user.id === currentUserId && <span className="text-violet-600 ml-2">(You)</span>}
+                        {user.id === currentUserId && (
+                          <span className="text-violet-600 ml-2">(You)</span>
+                        )}
                       </span>
                     </div>
                   </td>
@@ -224,7 +250,9 @@ export default function UsersPage() {
                     {canEditUser(user.type) && user.id !== currentUserId ? (
                       <select
                         value={user.type}
-                        onChange={(e) => handleTypeChange(user.id, e.target.value)}
+                        onChange={(e) =>
+                          handleTypeChange(user.id, e.target.value)
+                        }
                         disabled={updating === user.id}
                         className={`px-3 py-1 rounded-full text-sm font-medium border-0 cursor-pointer ${getTypeColor(user.type)} ${updating === user.id ? "opacity-50" : ""}`}
                       >
@@ -235,20 +263,24 @@ export default function UsersPage() {
                         ))}
                       </select>
                     ) : (
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(user.type)}`}>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(user.type)}`}
+                      >
                         {user.type.charAt(0).toUpperCase() + user.type.slice(1)}
                       </span>
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    {canEditUser(user.type) && user.id !== currentUserId && user.type !== "owner" && (
-                      <button
-                        onClick={() => handleDelete(user.id, user.name)}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
-                      >
-                        Delete
-                      </button>
-                    )}
+                    {canEditUser(user.type) &&
+                      user.id !== currentUserId &&
+                      user.type !== "owner" && (
+                        <button
+                          onClick={() => handleDelete(user.id, user.name)}
+                          className="text-red-600 hover:text-red-800 text-sm font-medium"
+                        >
+                          Delete
+                        </button>
+                      )}
                   </td>
                 </tr>
               ))}
@@ -257,7 +289,9 @@ export default function UsersPage() {
 
           {filteredUsers.length === 0 && (
             <div className="text-center py-8 text-gray-500">
-              {users.length === 0 ? "No users found" : "No users match your filters"}
+              {users.length === 0
+                ? "No users found"
+                : "No users match your filters"}
             </div>
           )}
         </div>
@@ -265,10 +299,22 @@ export default function UsersPage() {
         <div className="mt-6 p-4 bg-gray-50 rounded-lg">
           <h3 className="font-semibold text-gray-700 mb-2">User Types:</h3>
           <ul className="text-sm text-gray-600 space-y-1">
-            <li><span className="font-medium text-purple-700">Owner</span> — Full control over everything</li>
-            <li><span className="font-medium text-blue-700">Admin</span> — Can manage pending and viewer users</li>
-            <li><span className="font-medium text-green-700">Viewer</span> — Can view temperature data</li>
-            <li><span className="font-medium text-yellow-700">Pending</span> — Waiting for approval, no access</li>
+            <li>
+              <span className="font-medium text-purple-700">Owner</span> — Full
+              control over everything
+            </li>
+            <li>
+              <span className="font-medium text-blue-700">Admin</span> — Can
+              manage pending and viewer users
+            </li>
+            <li>
+              <span className="font-medium text-green-700">Viewer</span> — Can
+              view temperature data
+            </li>
+            <li>
+              <span className="font-medium text-yellow-700">Pending</span> —
+              Waiting for approval, no access
+            </li>
           </ul>
         </div>
       </div>
