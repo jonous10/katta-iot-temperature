@@ -101,7 +101,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                             },
                             formatter: function (val: any) {
                                 const date = new Date(val);
-                                date.setHours(date.getHours() + 2);
+                                date.setHours(date.getHours() + 1);
                                 return date.toLocaleString('en-GB', {
                                     day: '2-digit',
                                     month: 'short',
@@ -154,7 +154,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                             format: 'dd MMM yyyy HH:mm',
                             formatter: function (val: any) {
                                 const date = new Date(val);
-                                date.setHours(date.getHours() + 2);
+                                date.setHours(date.getHours() + 1);
                                 return date.toLocaleString('en-GB', {
                                     day: '2-digit',
                                     month: 'short',
