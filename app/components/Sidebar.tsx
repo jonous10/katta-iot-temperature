@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePermissions } from "@/hooks/usePermissions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,123 +11,158 @@ interface SidebarProps {
 
 export default function Sidebar({ children }: SidebarProps) {
   const pathname = usePathname();
+  const { hasPermission } = usePermissions();
 
-  const { hasPermission, userType, loading, isAdmin } = usePermissions();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
-    <div className="h-screen bg-(--sidebar-color) p-4 overflow-hidden">
-      <div className="flex h-[calc(100vh-2rem)]">
-        {/* Sidebar - fixed height */}
+    <div className="p-4 bg-(--sidebar-color) md:h-screen md:overflow-hidden">
+
+      {/* MOBILE TOPBAR */}
+      <div className="md:hidden flex items-center justify-between mb-4">
+        <h1 className="text-white text-xl font-bold">Sensordata</h1>
+
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="text-white focus:outline-none"
+        >
+          <svg
+            className="w-7 h-7"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d={
+                mobileOpen
+                  ? "M6 18L18 6M6 6l12 12"
+                  : "M4 6h16M4 12h16M4 18h16"
+              }
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* MOBILE MENU */}
+      <div
+        className={`md:hidden transition-all duration-300 overflow-hidden ${mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+      >
+        <nav className="flex flex-col space-y-1 bg-(--sidebar-color) p-3 rounded-xl">
+
+          <MobileLink href="/" pathname={pathname} label="Dashboard" />
+
+          {hasPermission("VIEW_TEMPERATURE_HISTORY") && (
+            <MobileLink href="/data" pathname={pathname} label="Data" />
+          )}
+
+          <MobileLink href="/" pathname={pathname} label="History" />
+
+          {hasPermission("VIEW_USERS") && (
+            <MobileLink href="/users" pathname={pathname} label="Users" />
+          )}
+
+          <MobileLink href="/settings" pathname={pathname} label="Settings" />
+        </nav>
+      </div>
+
+      {/* DESKTOP LAYOUT */}
+      <div className="hidden md:flex md:h-[calc(100vh-2rem)]">
+
         <aside className="w-56 bg-(--sidebar-color) flex flex-col py-6 relative flex-shrink-0">
-          {/* Logo/Title */}
           <div className="px-6 mb-8">
             <h1 className="text-white text-xl font-bold">Sensordata</h1>
           </div>
 
-          {/* Main Navigation */}
           <nav className="flex-1 flex flex-col px-2">
             <div className="space-y-1">
-              {/* Dashboard */}
-              <Link
-                href="/"
-                className={`relative flex items-center gap-3 px-4 py-3 rounded-r-xl transition-all duration-200 ${pathname === "/"
-                  ? "text-white bg-white/10"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
-              >
-                {/* Active indicator - white bar on the left */}
-                {pathname === "/" && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-10 bg-white rounded-r-full" />
-                )}
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-                <span className="font-medium">Dashboard</span>
-              </Link>
+              <DesktopLink href="/" pathname={pathname} label="Dashboard" />
 
-              {/* Data */}
-              {hasPermission('VIEW_TEMPERATURE_HISTORY') && (
-                <Link
-                  href="/data"
-                  className={`relative flex items-center gap-3 px-4 py-3 rounded-r-xl transition-all duration-200 ${pathname === "/data"
-                    ? "text-white bg-white/10"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
-                    }`}
-                >
-                  {pathname === "/data" && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-10 bg-white rounded-r-full" />
-                  )}
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                  <span className="font-medium">Data</span>
-                </Link>
+              {hasPermission("VIEW_TEMPERATURE_HISTORY") && (
+                <DesktopLink href="/data" pathname={pathname} label="Data" />
               )}
-              {/* History */}
 
-              <Link
-                href="/"
-                className={`relative flex items-center gap-3 px-4 py-3 rounded-r-xl transition-all duration-200 ${pathname === "/"
-                  ? "text-white bg-white/10"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
-              >
-                {pathname === "/" && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-10 bg-white rounded-r-full" />
-                )}
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="font-medium">History</span>
-              </Link>
+              <DesktopLink href="/" pathname={pathname} label="History" />
 
-              {/* Users */}
-              {hasPermission('VIEW_USERS') && (
-                <Link
-                  href="/users"
-                  className={`relative flex items-center gap-3 px-4 py-3 rounded-r-xl transition-all duration-200 ${pathname === "/users"
-                    ? "text-white bg-white/10"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
-                    }`}
-                >
-                  {pathname === "/users" && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-10 bg-white rounded-r-full" />
-                  )}
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
-                  <span className="font-medium">Users</span>
-                </Link>
+              {hasPermission("VIEW_USERS") && (
+                <DesktopLink href="/users" pathname={pathname} label="Users" />
               )}
             </div>
 
-            {/* Bottom Navigation */}
             <div className="mt-auto space-y-1">
-              {/* Settings */}
-              <Link
+              <DesktopLink
                 href="/settings"
-                className={`relative flex items-center gap-3 px-4 py-3 rounded-r-xl transition-all duration-200 ${pathname === "/settings"
-                  ? "text-white bg-white/10"
-                  : "text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
-              >
-                {pathname === "/settings" && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-10 bg-white rounded-r-full" />
-                )}
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span className="font-medium">Settings</span>
-              </Link>
+                pathname={pathname}
+                label="Settings"
+              />
             </div>
           </nav>
         </aside>
 
-        {/* Main Content Area - scrollable */}
-        <main className="flex-1 bg-white rounded-3xl ml-4 p-0 shadow-xl overflow-y-auto">
+        <main className="flex-1 bg-white rounded-3xl ml-4 p-0 shadow-xl md:overflow-y-auto">
+
           {children}
         </main>
       </div>
+
+      {/* MOBILE CONTENT AREA */}
+      <div className="md:hidden bg-white rounded-3xl p-0 shadow-xl mt-4 overflow-y-auto max-h-screen">
+        {children}
+      </div>
     </div>
+  );
+}
+
+/* --- COMPONENTS --- */
+
+function MobileLink({
+  href,
+  pathname,
+  label,
+}: {
+  href: string;
+  pathname: string;
+  label: string;
+}) {
+  const active = pathname === href;
+  return (
+    <Link
+      href={href}
+      className={`px-4 py-3 rounded-lg transition ${active
+        ? "bg-white/10 text-white"
+        : "text-white/70 hover:text-white hover:bg-white/5"
+        }`}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function DesktopLink({
+  href,
+  pathname,
+  label,
+}: {
+  href: string;
+  pathname: string;
+  label: string;
+}) {
+  const active = pathname === href;
+  return (
+    <Link
+      href={href}
+      className={`relative flex items-center gap-3 px-4 py-3 rounded-r-xl transition-all duration-200 ${active
+        ? "text-white bg-white/10"
+        : "text-white/70 hover:text-white hover:bg-white/5"
+        }`}
+    >
+      {active && (
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-10 bg-white rounded-r-full" />
+      )}
+      <span className="font-medium">{label}</span>
+    </Link>
   );
 }
