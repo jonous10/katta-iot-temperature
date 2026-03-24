@@ -34,7 +34,7 @@ type PermissionMap = Record<string, string[]>; // { PERMISSION_KEY: ["owner","ad
 
 export default function PermissionsPage() {
   const router = useRouter();
-  const { isOwner, loading } = usePermissions();
+  const { isOwner, userType, loading } = usePermissions();
 
   const [permissions, setPermissions] = useState<PermissionMap>({});
   const [original, setOriginal] = useState<PermissionMap>({});
@@ -116,7 +116,7 @@ export default function PermissionsPage() {
   if (loading || fetching) {
     return (
       <>
-        <Header />
+        <Header currentUser={userType || "Guest"} userType={userType} />
         <div className="flex items-center justify-center h-64">
           <div className="flex items-center gap-3 text-gray-500">
             <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
@@ -132,7 +132,7 @@ export default function PermissionsPage() {
 
   return (
     <>
-      <Header />
+      <Header currentUser={userType || "Guest"} userType={userType} />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
