@@ -19,6 +19,19 @@ export default function Home() {
         null,
     );
     const { hasPermission, userType, loading, isAdmin } = usePermissions();
+    const [sortField, setSortField] = useState<"ts" | "temperature" | null>(null);
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+
+    const handleSort = (field: "ts" | "temperature") => {
+        if (sortField === field) {
+            // Toggle direction if same column
+            setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+        } else {
+            // New column → default to descending
+            setSortField(field);
+            setSortDirection("desc");
+        }
+    };
 
     // Fetch data on component mount
     useEffect(() => {
@@ -50,6 +63,25 @@ export default function Home() {
             setApiData({ error: "Network error: " + err });
         }
     };
+
+
+    const sortedData = [...displayData].sort((a, b) => {
+        if (!sortField) return 0;
+
+        if (sortField === "ts") {
+            return sortDirection === "asc"
+                ? new Date(a.ts).getTime() - new Date(b.ts).getTime()
+                : new Date(b.ts).getTime() - new Date(a.ts).getTime();
+        }
+
+        if (sortField === "temperature") {
+            return sortDirection === "asc"
+                ? a.temperature - b.temperature
+                : b.temperature - a.temperature;
+        }
+
+        return 0;
+    });
 
     return (
         <VideoBackground>
@@ -151,18 +183,25 @@ export default function Home() {
                                     <table className="w-full">
                                         <thead className="bg-gray-50 border-b border-gray-200">
                                             <tr>
-                                                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Timestamp
+                                                <th
+                                                    onClick={() => handleSort("ts")}
+                                                    className="cursor-pointer px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                                >
+                                                    Timestamp {sortField === "ts" && (sortDirection === "asc" ? "↑" : "↓")}
                                                 </th>
-                                                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                    Temperature (°C)
+
+                                                <th
+                                                    onClick={() => handleSort("temperature")}
+                                                    className="cursor-pointer px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                                                >
+                                                    Temperature (°C) {sortField === "temperature" && (sortDirection === "asc" ? "↑" : "↓")}
                                                 </th>
                                             </tr>
                                         </thead>
 
                                         <tbody className="divide-y divide-gray-200">
-                                            {displayData.length > 0 ? (
-                                                displayData.map((row, idx) => (
+                                            {sortedData.length > 0 ? (
+                                                sortedData.map((row, idx) => (
                                                     <tr key={idx} className="hover:bg-gray-50">
                                                         <td className="px-6 py-4 text-gray-800">
                                                             {row.ts}
