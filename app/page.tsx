@@ -52,7 +52,7 @@ export default function Home() {
   };
 
   return (
-    <VideoBackground>
+    <>
       <Header currentUser={userType || "Guest"} userType={userType} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -269,6 +269,6 @@ export default function Home() {
           </div>
         )}
       </main>
-    </VideoBackground>
+    </>
   );
 }

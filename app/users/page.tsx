@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface User {
   id: number;
@@ -15,32 +15,23 @@ interface User {
 
 export default function UsersPage() {
   const router = useRouter();
+  const { hasPermission, userType, loading, isAdmin } = usePermissions();
   const [users, setUsers] = useState<User[]>([]);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
-  const [currentUserType, setCurrentUserType] = useState<string>("");
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
 
   useEffect(() => {
-    // Get current user type from cookie
-    const userType = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("userType="))
-      ?.split("=")[1];
-
-    setCurrentUserType(userType || "");
-
-    // Check if user has access
-    if (userType && !["admin", "owner"].includes(userType)) {
-      router.push("/");
-      return;
+    if (!loading) {
+      if (!userType || !["admin", "owner"].includes(userType)) {
+        router.push("/");
+        return;
+      }
+      fetchUsers();
     }
-
-    fetchUsers();
-  }, [router]);
+  }, [userType, loading]);
 
   const fetchUsers = async () => {
     try {
@@ -59,8 +50,6 @@ export default function UsersPage() {
       setCurrentUserId(data.currentUserId);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -74,15 +63,9 @@ export default function UsersPage() {
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update user");
 
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to update user");
-      }
-
-      // Update local state
-      setUsers(
-        users.map((u) => (u.id === userId ? { ...u, type: newType } : u)),
-      );
+      setUsers(users.map((u) => (u.id === userId ? { ...u, type: newType } : u)));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to update user");
     } finally {
@@ -91,9 +74,7 @@ export default function UsersPage() {
   };
 
   const handleDelete = async (userId: number, userName: string) => {
-    if (!confirm(`Are you sure you want to delete ${userName}?`)) {
-      return;
-    }
+    if (!confirm(`Are you sure you want to delete ${userName}?`)) return;
 
     try {
       const res = await fetch("/api/users", {
@@ -103,12 +84,8 @@ export default function UsersPage() {
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to delete user");
 
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to delete user");
-      }
-
-      // Remove from local state
       setUsers(users.filter((u) => u.id !== userId));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to delete user");
@@ -117,33 +94,24 @@ export default function UsersPage() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "owner":
-        return "bg-purple-100 text-purple-800";
-      case "admin":
-        return "bg-blue-100 text-blue-800";
-      case "viewer":
-        return "bg-green-100 text-green-800";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+      case "owner": return "bg-purple-100 text-purple-800";
+      case "admin": return "bg-blue-100 text-blue-800";
+      case "viewer": return "bg-green-100 text-green-800";
+      case "pending": return "bg-yellow-100 text-yellow-800";
+      default: return "bg-gray-100 text-gray-800";
     }
   };
 
   const canEditUser = (targetType: string) => {
-    if (currentUserType === "owner") return true;
-    if (currentUserType === "admin") {
-      return !["admin", "owner"].includes(targetType);
-    }
+    if (userType === "owner") return true;
+    if (userType === "admin") return !["admin", "owner"].includes(targetType);
     return false;
   };
 
-  const getAvailableTypes = () => {
-    if (currentUserType === "owner") {
-      return ["pending", "viewer", "admin", "owner"];
-    }
-    return ["pending", "viewer", "admin"];
-  };
+  const getAvailableTypes = () =>
+    userType === "owner"
+      ? ["pending", "viewer", "admin", "owner"]
+      : ["pending", "viewer", "admin"];
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
@@ -171,16 +139,13 @@ export default function UsersPage() {
 
   return (
     <>
-      <Header />
+      <Header currentUser={userType || "Guest"} userType={userType} />
       <div className="h-full m-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
-          <p className="text-gray-600 mt-1">
-            Manage user access and permissions
-          </p>
+          <p className="text-gray-600 mt-1">Manage user access and permissions</p>
         </div>
 
-        {/* Filters */}
         <div className="mb-4 flex flex-wrap gap-3">
           <div className="flex-1 min-w-[200px]">
             <input
@@ -208,29 +173,17 @@ export default function UsersPage() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Type
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">User</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredUsers.map((user) => (
                 <tr
                   key={user.id}
-                  className={
-                    user.id === currentUserId
-                      ? "bg-violet-50"
-                      : "hover:bg-gray-50"
-                  }
+                  className={user.id === currentUserId ? "bg-violet-50" : "hover:bg-gray-50"}
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -250,9 +203,7 @@ export default function UsersPage() {
                     {canEditUser(user.type) && user.id !== currentUserId ? (
                       <select
                         value={user.type}
-                        onChange={(e) =>
-                          handleTypeChange(user.id, e.target.value)
-                        }
+                        onChange={(e) => handleTypeChange(user.id, e.target.value)}
                         disabled={updating === user.id}
                         className={`px-3 py-1 rounded-full text-sm font-medium border-0 cursor-pointer ${getTypeColor(user.type)} ${updating === user.id ? "opacity-50" : ""}`}
                       >
@@ -263,24 +214,20 @@ export default function UsersPage() {
                         ))}
                       </select>
                     ) : (
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(user.type)}`}
-                      >
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(user.type)}`}>
                         {user.type.charAt(0).toUpperCase() + user.type.slice(1)}
                       </span>
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    {canEditUser(user.type) &&
-                      user.id !== currentUserId &&
-                      user.type !== "owner" && (
-                        <button
-                          onClick={() => handleDelete(user.id, user.name)}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium"
-                        >
-                          Delete
-                        </button>
-                      )}
+                    {canEditUser(user.type) && user.id !== currentUserId && user.type !== "owner" && (
+                      <button
+                        onClick={() => handleDelete(user.id, user.name)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -289,9 +236,7 @@ export default function UsersPage() {
 
           {filteredUsers.length === 0 && (
             <div className="text-center py-8 text-gray-500">
-              {users.length === 0
-                ? "No users found"
-                : "No users match your filters"}
+              {users.length === 0 ? "No users found" : "No users match your filters"}
             </div>
           )}
         </div>
@@ -299,22 +244,10 @@ export default function UsersPage() {
         <div className="mt-6 p-4 bg-gray-50 rounded-lg">
           <h3 className="font-semibold text-gray-700 mb-2">User Types:</h3>
           <ul className="text-sm text-gray-600 space-y-1">
-            <li>
-              <span className="font-medium text-purple-700">Owner</span> — Full
-              control over everything
-            </li>
-            <li>
-              <span className="font-medium text-blue-700">Admin</span> — Can
-              manage pending and viewer users
-            </li>
-            <li>
-              <span className="font-medium text-green-700">Viewer</span> — Can
-              view temperature data
-            </li>
-            <li>
-              <span className="font-medium text-yellow-700">Pending</span> —
-              Waiting for approval, no access
-            </li>
+            <li><span className="font-medium text-purple-700">Owner</span> — Full control over everything</li>
+            <li><span className="font-medium text-blue-700">Admin</span> — Can manage pending and viewer users</li>
+            <li><span className="font-medium text-green-700">Viewer</span> — Can view temperature data</li>
+            <li><span className="font-medium text-yellow-700">Pending</span> — Waiting for approval, no access</li>
           </ul>
         </div>
       </div>
