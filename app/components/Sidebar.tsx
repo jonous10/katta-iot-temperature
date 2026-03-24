@@ -65,6 +65,10 @@ export default function Sidebar({ children }: SidebarProps) {
             <MobileLink href="/users" pathname={pathname} label="Users" />
           )}
 
+          {hasPermission("MANAGE_PERMISSIONS") && (
+            <MobileLink href="/permissions" pathname={pathname} label="Permissions" />
+          )}
+
           <MobileLink href="/settings" pathname={pathname} label="Settings" />
         </nav>
       </div>
@@ -89,6 +93,10 @@ export default function Sidebar({ children }: SidebarProps) {
 
               {hasPermission("VIEW_USERS") && (
                 <DesktopLink href="/users" pathname={pathname} label="Users" />
+              )}
+
+              {hasPermission("MANAGE_PERMISSIONS") && (
+                <DesktopLink href="/permissions" pathname={pathname} label="Permissions" />
               )}
             </div>
 

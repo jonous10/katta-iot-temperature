@@ -21,6 +21,7 @@ export const PERMISSIONS = {
   // User management permissions
   VIEW_USERS: ['owner', 'admin'],
   MANAGE_USERS: ['owner', 'admin'],
+  MANAGE_PERMISSIONS: ['owner'], // Only owner can access permissions page
   MANAGE_ADMINS: ['owner'], // Only owner can change admin/owner types
 
   // System permissions
@@ -56,7 +57,9 @@ export class UserPermissions {
       '/api': ['owner', 'admin', 'viewer'],
       '/api/export': ['owner', 'admin'],
       '/api/users': ['owner', 'admin'],
-      '/api/delete': ['owner']
+      '/api/delete': ['owner'],
+      '/permissions': ['owner'], // Only owner can access permissions page
+      '/users': ['owner', 'admin'] // Admins and owners can access users page
     };
 
     const allowedTypes = routePermissions[route as keyof typeof routePermissions];
