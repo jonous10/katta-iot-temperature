@@ -2,13 +2,20 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import mysql from "mysql2/promise";
 import { getConnection } from "@/lib/db";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
 type UserRow = {
   id: number;
 };
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Gmail SMTP transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER, // isaksgronneverden@gmail.com
+    pass: process.env.GMAIL_APP_PASSWORD, // Your 16-character app password
+  },
+});
 
 export async function POST(req: Request) {
   try {
@@ -41,9 +48,9 @@ export async function POST(req: Request) {
 
     const resetUrl = `http://localhost:3000/reset-password?token=${token}`;
 
-    // 4. Send email with Resend
-    await resend.emails.send({
-      from: "onboarding@resend.dev", // IMPORTANT
+    // 4. Send email with Gmail
+    await transporter.sendMail({
+      from: `"Katta IoT" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: "Reset your password",
       html: `
