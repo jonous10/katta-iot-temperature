@@ -47,8 +47,8 @@ export default function Header({ currentUser, userType }: HeaderProps) {
               </svg>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Katta IoT</h1>
-              <p className="text-xs text-gray-500">Temperature Monitoring</p>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Katta IoT</h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Temperature Monitoring</p>
             </div>
           </div>
 
@@ -57,9 +57,9 @@ export default function Header({ currentUser, userType }: HeaderProps) {
             {isLoggedIn ? (
               <div className="flex items-center space-x-4">
                 {/* User Info */}
-                <div className="hidden sm:flex items-center space-x-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="hidden sm:flex items-center space-x-2 px-3 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-medium text-gray-700 capitalize">{userType}</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">{userType}</span>
                 </div>
 
                 {/* User Menu */}
@@ -70,15 +70,15 @@ export default function Header({ currentUser, userType }: HeaderProps) {
                     </span>
                   </div>
                   <div className="hidden md:block">
-                    <p className="text-sm font-medium text-gray-900">{currentUser}</p>
-                    <p className="text-xs text-gray-500 capitalize">{userType} User</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{currentUser}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{userType} User</p>
                   </div>
                 </div>
 
                 {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Logout
                 </button>
@@ -87,7 +87,7 @@ export default function Header({ currentUser, userType }: HeaderProps) {
               <div className="flex items-center space-x-3">
                 <a
                   href="/login"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   Sign In
                 </a>

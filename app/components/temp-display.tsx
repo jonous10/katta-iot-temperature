@@ -72,7 +72,7 @@ export default function TemperatureDisplay({
         </div>
 
         {/* Inner white circle */}
-        <div className={`${currentSize.inner} rounded-full bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center relative z-10 border border-white/50 shadow-sm`}>
+        <div className={`${currentSize.inner} rounded-full bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm flex flex-col items-center justify-center relative z-10 border border-white/50 dark:border-gray-600/50 shadow-sm`}>
 
           {/* Status emoji */}
           <div className={`absolute ${currentSize.emojiPosition} ${currentSize.emoji} animate-bounce drop-shadow-sm`}>
@@ -80,16 +80,16 @@ export default function TemperatureDisplay({
           </div>
 
           {/* Temperature text */}
-          <div className={`${currentSize.text} text-gray-800 tabular-nums leading-none`}>
+          <div className={`${currentSize.text} text-gray-800 dark:text-white tabular-nums leading-none`}>
             {roundedTemperature}°C
           </div>
 
           {/* Additional info for large version */}
           {size === "large" && (
             <>
-              <div className="text-sm text-gray-600 mt-1 font-medium">Celsius</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-medium">Celsius</div>
               {showWarning && getWarningMessage(temperature) && (
-                <div className="text-xs text-red-600 mt-2 font-semibold bg-red-50 px-3 py-1 rounded-lg border border-red-200 text-center">
+                <div className="text-xs text-red-600 dark:text-red-400 mt-2 font-semibold bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-lg border border-red-200 dark:border-red-800 text-center">
                   {getWarningMessage(temperature)}
                 </div>
               )}

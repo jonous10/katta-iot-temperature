@@ -60,13 +60,13 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                   Welcome to Temperature Monitor
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-400">
                   Real-time temperature monitoring and analytics for your IoT
                   sensors
                 </p>
@@ -94,7 +94,7 @@ export default function Home() {
 
         {/* User Status Card */}
         <div className="mb-8">
-          <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md p-4">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
@@ -103,13 +103,13 @@ export default function Home() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
                     Logged in as:{" "}
                     <span className="capitalize font-semibold">
                       {userType || "Guest"}
                     </span>
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {loading
                       ? "Loading permissions..."
                       : `Permissions: ${hasPermission("VIEW_TEMPERATURE") ? "Full access" : "Limited access"}`}
@@ -120,7 +120,7 @@ export default function Home() {
                 <div
                   className={`w-2 h-2 rounded-full ${hasPermission("VIEW_TEMPERATURE") ? "bg-green-500" : "bg-yellow-500"}`}
                 ></div>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
                   {hasPermission("VIEW_TEMPERATURE") ? "Active" : "Restricted"}
                 </span>
               </div>
@@ -135,12 +135,12 @@ export default function Home() {
 
             {/* Temperature History Section */}
             {hasPermission("VIEW_TEMPERATURE_HISTORY") ? (
-              <section className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+              <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg p-6">
                 <div className="mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                     Temperature History
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-400">
                     Analyze temperature trends over time
                   </p>
                 </div>
@@ -148,12 +148,12 @@ export default function Home() {
               </section>
             ) : (
               <div className="flex justify-center items-center">
-                <section className="bg-white rounded-full border border-gray-200 shadow-lg p-6 mx-auto my-auto inline-block">
+                <section className="bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700 shadow-lg p-6 mx-auto my-auto inline-block">
                   <div className="text-center my-10">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                       Current Temperature
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-gray-400">
                       Live reading from your IoT sensors
                     </p>
                   </div>
@@ -172,12 +172,12 @@ export default function Home() {
 
             {/* Admin Controls Section */}
             {hasPermission("MANAGE_USERS") && (
-              <section className="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl border border-red-200 shadow-lg p-6">
+              <section className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-2xl border border-red-200 dark:border-red-800 shadow-lg p-6">
                 <div className="mb-6">
-                  <h3 className="text-xl font-bold text-red-900 mb-2">
+                  <h3 className="text-xl font-bold text-red-900 dark:text-red-400 mb-2">
                     {hasPermission("MANAGE_ADMINS") ? "Owner Controls" : "Admin Controls"}
                   </h3>
-                  <p className="text-red-700">
+                  <p className="text-red-700 dark:text-red-500">
                     {hasPermission("MANAGE_ADMINS")
                       ? "Full system administrative functions"
                       : "Administrative functions for user management"}
@@ -254,7 +254,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="flex items-center justify-center min-h-[400px]">
-            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl border border-yellow-200 shadow-lg p-8 text-center max-w-md">
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl border border-yellow-200 dark:border-yellow-800 shadow-lg p-8 text-center max-w-md">
               <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-8 h-8 text-white"
@@ -270,13 +270,13 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-yellow-900 mb-2">
+              <h3 className="text-xl font-bold text-yellow-900 dark:text-yellow-400 mb-2">
                 Access Restricted
               </h3>
-              <p className="text-yellow-800 mb-4">
+              <p className="text-yellow-800 dark:text-yellow-500 mb-4">
                 You don't have permission to view temperature data.
               </p>
-              <p className="text-sm text-yellow-700">
+              <p className="text-sm text-yellow-700 dark:text-yellow-600">
                 Contact an administrator for access.
               </p>
             </div>

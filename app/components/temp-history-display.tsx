@@ -16,9 +16,24 @@ interface TempHistoryDisplayProps {
 export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
     const [hoursToShow, setHoursToShow] = useState(24);
     const [sortedData, setSortedData] = useState<SensorData[]>([]);
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
     const chartRef = useRef<HTMLDivElement>(null);
     const chartInstanceRef = useRef<any>(null);
+
+    // Detect dark mode
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'));
+        };
+        checkDarkMode();
+        
+        // Watch for theme changes
+        const observer = new MutationObserver(checkDarkMode);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        
+        return () => observer.disconnect();
+    }, []);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -69,6 +84,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                         toolbar: {
                             show: false,
                         },
+                        background: 'transparent',
                     },
                     title: {
                         show: "",
@@ -94,7 +110,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                         },
                         labels: {
                             style: {
-                                colors: "#616161",
+                                colors: isDarkMode ? "#9ca3af" : "#616161",
                                 fontSize: "12px",
                                 fontFamily: "inherit",
                                 fontWeight: 400,
@@ -121,7 +137,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                     yaxis: {
                         labels: {
                             style: {
-                                colors: "#616161",
+                                colors: isDarkMode ? "#9ca3af" : "#616161",
                                 fontSize: "12px",
                                 fontFamily: "inherit",
                                 fontWeight: 400,
@@ -133,7 +149,7 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                     },
                     grid: {
                         show: true,
-                        borderColor: "#dddddd",
+                        borderColor: isDarkMode ? "#374151" : "#dddddd",
                         strokeDashArray: 5,
                         xaxis: {
                             lines: {
@@ -185,21 +201,21 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
                 };
             });
         }
-    }, [data, hoursToShow]);
+    }, [data, hoursToShow, isDarkMode]);
 
     return (
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg overflow-hidden">
             {/* Header */}
-            <div className="clean-fade px-6 py-4 border-b border-gray-400">
+            <div className="clean-fade px-6 py-4 border-b border-gray-400 dark:border-gray-600">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     {/* Title and current temp */}
                     <div className="flex items-center gap-4">
                         <TemperatureDisplay temperature={data[data.length - 1]?.temperature || 0} size="small" />
                         <div>
-                            <h3 className="text-lg font-bold text-gray-900">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                                 Temperature Analytics
                             </h3>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
                                 Monitor temperature trends over time
                             </p>
                         </div>
@@ -207,11 +223,11 @@ export default function TempHistoryDisplay({ data }: TempHistoryDisplayProps) {
 
                     {/* Time range selector */}
                     <div className="flex items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Range:</label>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Range:</label>
                         <select
                             value={hoursToShow}
                             onChange={(e) => setHoursToShow(Number(e.target.value))}
-                            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm hover:border-gray-400 transition-colors"
+                            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
                         >
                             <option value={1}>1 Hour</option>
                             <option value={6}>6 Hours</option>

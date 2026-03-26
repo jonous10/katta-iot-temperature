@@ -54,7 +54,7 @@ const Icons = {
 
 export default function Sidebar({ children }: SidebarProps) {
   const pathname = usePathname();
-  const { hasPermission } = usePermissions();
+  const { hasPermission, isOwner } = usePermissions();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -78,11 +78,10 @@ export default function Sidebar({ children }: SidebarProps) {
           {hasPermission("VIEW_TEMPERATURE_HISTORY") && (
             <MobileLink href="/data" pathname={pathname} label="Data" icon={Icons.Data} />
           )}
-          <MobileLink href="/history" pathname={pathname} label="History" icon={Icons.History} />
           {hasPermission("VIEW_USERS") && (
             <MobileLink href="/users" pathname={pathname} label="Users" icon={Icons.Users} />
           )}
-          {hasPermission("MANAGE_PERMISSIONS") && (
+          {isOwner() && (
             <MobileLink href="/permissions" pathname={pathname} label="Permissions" icon={Icons.Permissions} />
           )}
           <MobileLink href="/settings" pathname={pathname} label="Settings" icon={Icons.Settings} />
@@ -102,11 +101,10 @@ export default function Sidebar({ children }: SidebarProps) {
               {hasPermission("VIEW_TEMPERATURE_HISTORY") && (
                 <DesktopLink href="/data" pathname={pathname} label="Data" icon={Icons.Data} />
               )}
-              <DesktopLink href="/history" pathname={pathname} label="History" icon={Icons.History} />
               {hasPermission("VIEW_USERS") && (
                 <DesktopLink href="/users" pathname={pathname} label="Users" icon={Icons.Users} />
               )}
-              {hasPermission("MANAGE_PERMISSIONS") && (
+              {isOwner() && (
                 <DesktopLink href="/permissions" pathname={pathname} label="Permissions" icon={Icons.Permissions} />
               )}
             </div>
@@ -117,13 +115,13 @@ export default function Sidebar({ children }: SidebarProps) {
           </nav>
         </aside>
 
-        <main className="flex-1 bg-white rounded-3xl ml-4 p-0 shadow-xl md:overflow-y-auto">
+        <main className="flex-1 bg-white dark:bg-gray-900 rounded-3xl ml-4 p-0 shadow-xl md:overflow-y-auto">
           {children}
         </main>
       </div>
 
       {/* MOBILE CONTENT AREA */}
-      <div className="md:hidden bg-white rounded-3xl p-0 shadow-xl mt-4 overflow-y-auto max-h-screen">
+      <div className="md:hidden bg-white dark:bg-gray-900 rounded-3xl p-0 shadow-xl mt-4 overflow-y-auto max-h-screen">
         {children}
       </div>
     </div>

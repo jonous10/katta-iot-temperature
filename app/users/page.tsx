@@ -94,11 +94,11 @@ export default function UsersPage() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "owner": return "bg-purple-100 text-purple-800";
-      case "admin": return "bg-blue-100 text-blue-800";
-      case "viewer": return "bg-green-100 text-green-800";
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "owner": return "bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300";
+      case "admin": return "bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300";
+      case "viewer": return "bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300";
+      case "pending": return "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300";
+      default: return "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300";
     }
   };
 
@@ -142,8 +142,8 @@ export default function UsersPage() {
       <Header currentUser={userType || "Guest"} userType={userType} />
       <div className="h-full m-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
-          <p className="text-gray-600 mt-1">Manage user access and permissions</p>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">User Management</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage user access and permissions</p>
         </div>
 
         <div className="mb-4 flex flex-wrap gap-3">
@@ -153,13 +153,13 @@ export default function UsersPage() {
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             />
           </div>
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           >
             <option value="all">All Types</option>
             <option value="pending">Pending</option>
@@ -169,36 +169,36 @@ export default function UsersPage() {
           </select>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">User</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">User</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Type</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredUsers.map((user) => (
                 <tr
                   key={user.id}
-                  className={user.id === currentUserId ? "bg-violet-50" : "hover:bg-gray-50"}
+                  className={user.id === currentUserId ? "bg-violet-50 dark:bg-violet-900/20" : "hover:bg-gray-50 dark:hover:bg-gray-700"}
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-violet-200 flex items-center justify-center text-violet-700 font-semibold text-sm">
+                      <div className="w-8 h-8 rounded-full bg-violet-200 dark:bg-violet-800 flex items-center justify-center text-violet-700 dark:text-violet-300 font-semibold text-sm">
                         {user.name.charAt(0).toUpperCase()}
                       </div>
-                      <span className="font-medium text-gray-900">
+                      <span className="font-medium text-gray-900 dark:text-white">
                         {user.name}
                         {user.id === currentUserId && (
-                          <span className="text-violet-600 ml-2">(You)</span>
+                          <span className="text-violet-600 dark:text-violet-400 ml-2">(You)</span>
                         )}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-gray-600">{user.email}</td>
+                  <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{user.email}</td>
                   <td className="px-6 py-4">
                     {canEditUser(user.type) && user.id !== currentUserId ? (
                       <select
@@ -235,19 +235,19 @@ export default function UsersPage() {
           </table>
 
           {filteredUsers.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
               {users.length === 0 ? "No users found" : "No users match your filters"}
             </div>
           )}
         </div>
 
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-semibold text-gray-700 mb-2">User Types:</h3>
-          <ul className="text-sm text-gray-600 space-y-1">
-            <li><span className="font-medium text-purple-700">Owner</span> — Full control over everything</li>
-            <li><span className="font-medium text-blue-700">Admin</span> — Can manage pending and viewer users</li>
-            <li><span className="font-medium text-green-700">Viewer</span> — Can view temperature data</li>
-            <li><span className="font-medium text-yellow-700">Pending</span> — Waiting for approval, no access</li>
+        <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">User Types:</h3>
+          <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <li><span className="font-medium text-purple-700 dark:text-purple-400">Owner</span> — Full control over everything</li>
+            <li><span className="font-medium text-blue-700 dark:text-blue-400">Admin</span> — Can manage pending and viewer users</li>
+            <li><span className="font-medium text-green-700 dark:text-green-400">Viewer</span> — Can view temperature data</li>
+            <li><span className="font-medium text-yellow-700 dark:text-yellow-400">Pending</span> — Waiting for approval, no access</li>
           </ul>
         </div>
       </div>

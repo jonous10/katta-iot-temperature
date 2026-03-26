@@ -1,10 +1,19 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
+  --background: #f8fafc;
   --foreground: #171717;
   --card-bg-color: #ffffff;
-  --sidebar-color: #7B79B8;
+  --sidebar-color: #a5a3d9;
+}
+
+.dark {
+  --background: #111827;
+  --foreground: #f1f5f9;
+  --card-bg-color: #1e293b;
+  --sidebar-color: #374151;
 }
 
 @theme inline {
@@ -20,12 +29,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
   overflow-y: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .clean-fade {
-  @apply bg-linear-to-r from-blue-50 to-white/60 shadow-2xl shadow-white;
+  @apply bg-transparent;
+}
+
+.dark .clean-fade {
+  @apply bg-transparent;
 }
 
 .clean-blue-fade {
   @apply bg-linear-to-br from-blue-500 to-cyan-400 shadow-md shadow-gray-200;
+}
+
+.dark .clean-blue-fade {
+  @apply shadow-gray-900;
 }
